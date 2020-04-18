@@ -1,0 +1,11 @@
+h1 Login
+if errors
+    each err in errors
+        p=err
+form(action="/auth/login", method='POST')
+    label Email
+    input(type="text", name="email", value=values ? values.email : '')
+    br
+    label Password
+    input(type="password", name="password", value=values ? values.password : '')
+    button Login

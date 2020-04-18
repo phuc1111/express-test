@@ -1,0 +1,8 @@
+h3 User
+ul
+    each user in users
+        li
+        span=user.name
+        span &nbsp;
+        a(href="/users/"+ user.id) View       
+a(href="/users/create") create new user       
