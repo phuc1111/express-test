@@ -1,13 +1,18 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const port = 3000;
 
+var mongoose = require('mongoose')
+mongoose.connect(process.env.MONGO_URL);
 const db = require("./db");
 const userRoutes = require("./routes/user.route");
 const authRoutes = require("./routes/auth.route");
 const cookieParser = require('cookie-parser');
-app.use(cookieParser('kjjcfxrdnnjfgf'));
+app.use(cookieParser(process.env.SESSION_SECRET));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }))
 db.defaults({ users: [] })
     .write()
 app.set('view engine', 'pug')

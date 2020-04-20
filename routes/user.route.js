@@ -6,10 +6,13 @@ const shortid = require('shortid');
 var authMiddleware = require('../middleware/auth.middleware')
 var userValidate = require('../validate/user.validate')
     // router.get('/:id', controller.get)
-router.get('/', authMiddleware.requireAuth, controller.index)
+router.get('/', controller.index)
+router.get('/:id', controller.detail)
 router.get('/create', controller.create)
+router.post('/create', controller.postCreate)
+router.delete('/delete/:id', controller.delete)
+router.patch('/update/:id', controller.update)
+    // router.delete('/delete/:userId', controller.delete)
 
-router.post('/create', userValidate.postCreate, controller.postCreate)
-
-router.get('/search', controller.search)
+// router.update('/delete/:userId', controller.delete)
 module.exports = router;

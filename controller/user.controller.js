@@ -1,31 +1,62 @@
-var db = require('../db');
-const shortid = require('shortid');
-module.exports.index = function(req, res) {
-    res.render('users/index', {
-        users: db.get('users').value()
-    })
-}
-module.exports.search = function(req, res) {
-    var q = req.query.q;
-    var matchedUser = db.get('users').value().filter(user => {
-        return user.name.toLowerCase().indexOf(q.toLowerCase()) !== -1;
-    })
-    res.render('users/index', {
-        users: matchedUser
-    })
-}
-module.exports.create = function(req, res) {
-        res.render('users/create')
+var User = require('../model/user.model');
+
+
+
+module.exports.index = async function(req, res, next) {
+    try {
+        var users = await User.find()
+        res.json(users)
+    } catch (err) {
+        next(err.message)
     }
-    // module.exports.get = function(req, res) {
-    //     res.render('users/detail', {
-    //         users: db.get('users')
-    //             .find({ id: parseInt(req.params.id) })
-    //             .value()
-    //     })
-    // }
-module.exports.postCreate = function(req, res) {
-    req.body.id = shortid.generate();
-    db.get('users').push(req.body).write()
-    res.redirect('/users')
+}
+
+module.exports.detail = async function(req, res, next) {
+    try {
+        var users = await User.findById(req.params.id)
+        res.json(users)
+    } catch (err) {
+        next(err.message)
+    }
+}
+
+module.exports.create = function(req, res, next) {
+    res.render('users/create')
+}
+
+module.exports.postCreate = async function(req, res, next) {
+    try {
+        var user = await User.create(req.body);
+        res.send(user)
+    } catch (err) {
+        next(err.message)
+    }
+
+}
+module.exports.delete = async function(req, res, next) {
+    try {
+        var user = await User.deleteOne({ '_id': req.params.id })
+        res.json(user)
+    } catch (err) {
+        next(err.message)
+    }
+
+}
+
+module.exports.update = async function(req, res, next) {
+    try {
+        var user = await User.updateMany({ _id: req.params.id }, {
+            $set: {
+                email: req.body.email,
+                name: req.body.name,
+                password: req.body.password
+            }
+        });
+        res.json(user);
+
+    } catch (err) {
+        next(err.message)
+    }
+
+
 }
