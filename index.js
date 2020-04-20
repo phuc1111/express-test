@@ -4,6 +4,15 @@ const app = express();
 const bodyParser = require('body-parser');
 const port = process.env.PORT || 3000;
 
+const MongoClient = require('mongodb').MongoClient;
+const uri = "mongodb+srv://admin:superbug4043@cluster-for-user-e2ncr.mongodb.net/test?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true });
+client.connect(err => {
+    const collection = client.db("test").collection("devices");
+    // perform actions on the collection object
+    client.close();
+});
+
 var mongoose = require('mongoose')
 mongoose.connect(process.env.MONGO_URL);
 const db = require("./db");
