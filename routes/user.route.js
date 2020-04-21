@@ -6,7 +6,11 @@ const shortid = require('shortid');
 var authMiddleware = require('../middleware/auth.middleware')
 var userValidate = require('../validate/user.validate')
     // router.get('/:id', controller.get)
-router.get('/', controller.index)
+function checkUserAuth(req, res, next) {
+    if (req.session.user) return next();
+    return next(new NotAuthorizedError());
+}
+router.get('/', checkUserAuth, controller.index)
 router.get('/:id', controller.detail)
 router.get('/create', controller.create)
 router.post('/create', controller.postCreate)
